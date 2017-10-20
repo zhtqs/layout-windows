@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE hInst,HINSTANCE hPrev,LPTSTR cmdLine,int nCmdShow)
     {
         HWND h=*it;//copy memory
         ShowWindow(h,SW_NORMAL);
-        SetWindowPos(h,HWND_DESKTOP,irow*iwidth-5,icol*iheight-5,iwidth+10,iheight+10,SWP_NOACTIVATE);
+        SetWindowPos(h,HWND_DESKTOP,irow*iwidth-8,icol*iheight-5,iwidth+16,iheight+10,SWP_NOACTIVATE);
         icol++;
         if(icol>1)
         {
