@@ -10,13 +10,16 @@ int WINAPI WinMain(HINSTANCE hInst,HINSTANCE hPrev,LPTSTR cmdLine,int nCmdShow)
     EnumWindows(LW_Enum_Proc,NULL);
     int irow=0;
     int icol=0;
-    //int iwidth=GetSystemMetrics(SM_CXSCREEN)/2;
-    //int iheight=GetSystemMetrics(SM_CYSCREEN)/2-20;
+    int ileft=0;
+    int itop=0;
+    int iscreen_width=GetSystemMetrics(SM_CXSCREEN);
+    int iscreen_height=GetSystemMetrics(SM_CYSCREEN);
     //POINT pt={0};
     //MONITORINFO mi={0};
     //HMONITOR hMonitor=MonitorFromPoint(pt,MONITOR_DEFAULTTOPRIMARY);
     //GetMonitorInfoA(hMonitor,&mi);
     RECT rc={0};
+    WINDOWPLACEMENT wd={0};
     SystemParametersInfoA(SPI_GETWORKAREA,0,&rc,0);
     int iwidth=(rc.right-rc.left)/2;
     int iheight=(rc.bottom-rc.top)/2;
@@ -24,8 +27,21 @@ int WINAPI WinMain(HINSTANCE hInst,HINSTANCE hPrev,LPTSTR cmdLine,int nCmdShow)
     for(std::vector<HWND>::iterator it=hWnds.begin();it!=hWnds.end();it++)
     {
         HWND h=*it;//copy memory
+        GetWindowPlacement(h,&wd);
+        wd.ptMinPosition.x=0;
+        wd.ptMinPosition.y=0;
+        wd.ptMaxPosition.x=iscreen_width;
+        wd.ptMaxPosition.y=iscreen_height;
+        wd.flags=SW_SHOWNORMAL;
+        ileft=irow*iwidth-8;
+        itop=icol*iheight-5;
+        wd.rcNormalPosition.left=ileft;
+        wd.rcNormalPosition.top=itop;
+        wd.rcNormalPosition.right=ileft+iwidth+16;
+        wd.rcNormalPosition.bottom=itop+iheight+10;
+        SetWindowPlacement(h,&wd);
         ShowWindow(h,SW_NORMAL);
-        SetWindowPos(h,HWND_DESKTOP,irow*iwidth-8,icol*iheight-5,iwidth+16,iheight+10,SWP_NOACTIVATE);
+        SetWindowPos(h,HWND_DESKTOP,ileft,itop,iwidth+16,iheight+10,SWP_NOACTIVATE);
         icol++;
         if(icol>1)
         {
